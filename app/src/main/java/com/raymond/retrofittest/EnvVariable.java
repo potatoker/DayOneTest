@@ -16,4 +16,14 @@ public class EnvVariable {
            add("https://img1.doubanio.com/view/photo/photo/public/p1937781138.jpg");
        }
    };
+
+    public final static String HEADER_USERID = "userid";
+
+    public final static String MOMENT_PATH = "";
+    public final static String RESPONSE_RESULT = "result";
+    public final static String RESPONSE_RESULT_OK = "OK";
+    public final static String DATA = "data";
+
+    public final static String DAY_ID = "dayId";
+
 }

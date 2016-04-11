@@ -76,4 +76,13 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MomentViewHolder>{
         }
 
     }
+
+    public void refill(List<Moment> data, boolean flush){
+        if(flush) moments.clear();
+        if(data != null){
+            moments.addAll(data);
+            notifyDataSetChanged();
+        }
+    }
+
 }

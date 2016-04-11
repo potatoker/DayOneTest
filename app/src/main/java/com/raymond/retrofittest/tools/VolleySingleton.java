@@ -2,7 +2,10 @@ package com.raymond.retrofittest.tools;
 
 import android.graphics.Bitmap;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.raymond.retrofittest.MyApplication;
@@ -11,7 +14,7 @@ import com.raymond.retrofittest.MyApplication;
  * Created by raymond on 16/3/13.
  */
 public class VolleySingleton {
-    private static VolleySingleton mInstance = null;
+
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
 
@@ -40,6 +43,15 @@ public class VolleySingleton {
 
     public ImageLoader getImageLoader(){
         return this.mImageLoader;
+    }
+
+    public <T> void addToRequestQueue(Request<T> req){
+        int socketTimeout = 90000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        req.setRetryPolicy(policy);
+        getRequestQueue().add(req);
     }
 
 }
