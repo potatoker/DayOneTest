@@ -1,12 +1,9 @@
 package com.raymond.retrofittest.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -20,13 +17,13 @@ import java.util.List;
 /**
  * Created by raymond on 16/4/6.
  */
-public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MomentViewHolder>{
+public class OneDayAdapter extends RecyclerView.Adapter<OneDayAdapter.MomentViewHolder>{
 
-    private static final String TAG = "RVAdapter";
+    private static final String TAG = "OneDayAdapter";
     private List<Moment> moments;
     private ImageLoader imageLoader;
 
-    public RVAdapter(List<Moment> moments){
+    public OneDayAdapter(List<Moment> moments){
         this.moments = moments;
     }
 
@@ -58,6 +55,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MomentViewHolder>{
     public int getItemCount() {
         return moments.size();
     }
+
 
 
 

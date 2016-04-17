@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">RetrofitTest</string>
     <string name="action_settings">Settings</string>
+
+    <!-- 用户提示 -->
+    <string name="error_network">链接服务器失败，请检查网络</string>
+
+
+
 </resources>

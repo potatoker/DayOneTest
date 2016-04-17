@@ -24,6 +24,11 @@ public class EnvVariable {
     public final static String RESPONSE_RESULT_OK = "OK";
     public final static String DATA = "data";
 
-    public final static String DAY_ID = "dayId";
+    //network interface constants for param names
+    public final static String DAY_ID = "day_id";
+    public final static String USER_ID = "user_id";
+
+    //network interface constants for server apis
+    public final static String API_REQUEST_ONE_DAY = SERVER_URL + "bla";
 
 }
