@@ -1,4 +1,4 @@
-package com.raymond.retrofittest.ui;
+package com.raymond.retrofittest.ui.myoneday;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +14,6 @@ import com.raymond.retrofittest.adapters.OneDayAdapter;
 import com.raymond.retrofittest.datatype.Moment;
 import com.raymond.retrofittest.datatype.OneDay;
 import com.raymond.retrofittest.datatype.User;
-import com.raymond.retrofittest.net.DayInfoLoader;
 
 
 import java.util.ArrayList;

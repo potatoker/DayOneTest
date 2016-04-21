@@ -1,4 +1,4 @@
-package com.raymond.retrofittest.Utils;
+package com.raymond.retrofittest.utils;
 
 /**
  * Created by raymond on 16/4/16.

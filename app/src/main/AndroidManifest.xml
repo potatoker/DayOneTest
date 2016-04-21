@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.raymond.retrofittest">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -19,11 +25,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.myoneday.MyDayActivity" />
-        <activity android:name=".ui.DayActivity"></activity>
+        <activity android:name=".ui.myoneday.DayActivity" />
+        <activity android:name=".ui.PublishActivity" />
+        <activity android:name=".ui.BaseDrawerActivity" />
+        <activity android:name=".ui.MyDaysActivity"></activity>
     </application>
-
-    <uses-feature android:name="android.hardware.camera"
-        android:required="true" />
 
 </manifest>

@@ -31,4 +31,12 @@ public class EnvVariable {
     //network interface constants for server apis
     public final static String API_REQUEST_ONE_DAY = SERVER_URL + "bla";
 
+
+    //special value for instinct
+    public static final int MEDIA_TYPE_IMAGE = 4;
+    public static final int MEDIA_TYPE_VIDEO = 5;
+
+    //all the photo should be the same size to display?
+
+
 }

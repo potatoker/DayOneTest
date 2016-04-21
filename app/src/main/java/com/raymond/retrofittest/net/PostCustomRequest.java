@@ -7,7 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
-import com.raymond.retrofittest.Utils.StringUtils;
+import com.raymond.retrofittest.utils.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;

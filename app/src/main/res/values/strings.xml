@@ -4,7 +4,7 @@
 
     <!-- 用户提示 -->
     <string name="error_network">链接服务器失败，请检查网络</string>
-
+    <string name="error_external_storage">存储空间不够，请检查</string>
 
 
 </resources>
