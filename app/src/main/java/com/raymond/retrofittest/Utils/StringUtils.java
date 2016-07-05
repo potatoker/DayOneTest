@@ -6,8 +6,8 @@ package com.raymond.retrofittest.utils;
 public class StringUtils {
 
     public static String fixJsonString(String jsonString){
-        int startIndex = jsonString.indexOf('{');
-        int endIndex = jsonString.lastIndexOf('}');
+        int startIndex = jsonString.indexOf('\"');
+        int endIndex = jsonString.lastIndexOf('\"');
         return jsonString.substring(startIndex, endIndex + 1);
     }
 }

@@ -73,26 +73,26 @@
             android:orientation="horizontal">
 
             <ToggleButton
-                android:id="@+id/save"
+                android:id="@+id/save_to_current"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginLeft="24dp"
                 android:layout_marginRight="16dp"
                 android:checked="true"
-                android:textOff="SAVE"
-                android:textOn="SAVE"
+                android:textOff="添加到当前一天"
+                android:textOn="添加到当前一天"
                 android:textColor="#ffffff"/>
             <ToggleButton
-                android:id="@+id/discard"
+                android:id="@+id/save_to_fav"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="24dp"
                 android:textColor="#ffffff"
-                android:textOff="DISCARD"
-                android:textOn="DISCARD"/>
+                android:textOff="添加到收藏"
+                android:textOn="添加到收藏"/>
 
 
         </LinearLayout>

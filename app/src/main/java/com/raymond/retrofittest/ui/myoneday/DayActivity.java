@@ -1,35 +1,34 @@
 package com.raymond.retrofittest.ui.myoneday;
 
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
-import com.raymond.retrofittest.DataPresenter;
 import com.raymond.retrofittest.EnvVariable;
 import com.raymond.retrofittest.R;
-import com.raymond.retrofittest.adapters.OneDayAdapter;
-import com.raymond.retrofittest.datatype.Moment;
-import com.raymond.retrofittest.datatype.OneDay;
-import com.raymond.retrofittest.datatype.User;
 
+import com.raymond.retrofittest.datatype.Moment;
+
+import com.raymond.retrofittest.db.DatabaseManager;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class DayActivity extends AppCompatActivity implements DataPresenter.GetOneDayInterface{
+public class DayActivity extends AppCompatActivity{
 
-    @Bind(R.id.recycler_view)
+    @Bind(R.id.my_detail_recycler_view)
     RecyclerView rv;
 
-    private OneDayAdapter oneDayAdapter;
-    private List<Moment> momentList = new ArrayList<>();//不至于是null以生成adapter，后面会在网络中更新
+    @Bind(R.id.my_days_fresher)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    private DetailDayAdapter detailDayAdapter;
+    private ArrayList<Moment> momentList = new ArrayList<>();//不至于是null以生成adapter，后面会在网络中更新
 
     private String dayId;
 
@@ -42,30 +41,38 @@ public class DayActivity extends AppCompatActivity implements DataPresenter.GetO
         Intent intent = getIntent();
         dayId = intent.getStringExtra(EnvVariable.DAY_ID);
 
+
+        swipeRefreshLayout.setColorSchemeColors(R.color.colorPrimary);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadDetailDay();
+            }
+        });
+
+        setRv(rv);
+    }
+
+    public void onResume(){
+        super.onResume();
+        loadDetailDay();
+    }
+
+
+    public void setRv(RecyclerView rv){
+        detailDayAdapter = new DetailDayAdapter(momentList, DayActivity.this);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(DayActivity.this);
         rv.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        rv.setLayoutManager(llm);
-        initializeData();
-        oneDayAdapter = new OneDayAdapter(momentList);
-        rv.setAdapter(oneDayAdapter);
-
-        DataPresenter.requestOneDay(User.getInstance().getuId(), dayId, DayActivity.this);
-
+        rv.setLayoutManager(manager);
+        rv.setAdapter(detailDayAdapter);
+        loadDetailDay();
     }
 
-    private void initializeData(){
-        momentList = new ArrayList<>();
-        momentList.add(new Moment("01", EnvVariable.TEST_IMG_UTL.get(0), new Date(), "lala"));
-        momentList.add(new Moment("02", EnvVariable.TEST_IMG_UTL.get(1), new Date(), "baba"));
-        momentList.add(new Moment("03", EnvVariable.TEST_IMG_UTL.get(2), new Date(), "caca"));
+    public void loadDetailDay(){
+        swipeRefreshLayout.setRefreshing(true);
+        momentList = DatabaseManager.getMomentByDayId(dayId);
+        detailDayAdapter.refill(momentList, true);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
-    @Override
-    public void onGetOneDay(OneDay day, Boolean ok) {
-        if(ok){
-            oneDayAdapter.refill(day.getMoments(), true);
-        }else{
-            Toast.makeText(DayActivity.this, R.string.error_network, Toast.LENGTH_SHORT).show();
-        }
-    }
 }

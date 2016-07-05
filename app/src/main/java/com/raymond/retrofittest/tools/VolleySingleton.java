@@ -1,6 +1,7 @@
 package com.raymond.retrofittest.tools;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -15,11 +16,22 @@ import com.raymond.retrofittest.MyApplication;
  */
 public class VolleySingleton {
 
+    private static final String TAG = "VolleySingleton";
+    //关于单例的各类模式，参见：http://wuchong.me/blog/2014/08/28/how-to-correctly-write-singleton-pattern/
+
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
 
     private VolleySingleton(){
+
+        //可以发现在CustomVolleyRequest这另一个相同功能的单例类里面用的构造方法是new
+        //需要传递两个参数，cache 和network，并且需要手动启动.
+        //其实这里用的方法使用的是默认的设置，如果需要定制，应该用new
+        if(MyApplication.getAppContext() == null){
+            Log.d(TAG, "context null");
+        }
         mRequestQueue = Volley.newRequestQueue(MyApplication.getAppContext());
+
         mImageLoader = new ImageLoader(this.mRequestQueue, new BitmapCache());
     }
 
@@ -29,11 +41,6 @@ public class VolleySingleton {
     }
 
     public static VolleySingleton getInstance(){
-//        if(mInstance == null){
-//            mInstance = new VolleySingleton();
-//        }
-//        return mInstance;
-
         return SingletonHolder.instance;
     }
 

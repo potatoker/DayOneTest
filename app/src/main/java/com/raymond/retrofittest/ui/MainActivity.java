@@ -1,14 +1,12 @@
 package com.raymond.retrofittest.ui;
 
-import android.app.Activity;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
+
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -16,20 +14,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.raymond.retrofittest.DataPresenter;
 import com.raymond.retrofittest.EnvVariable;
 import com.raymond.retrofittest.R;
+import com.raymond.retrofittest.adapters.DaysAdapter;
+import com.raymond.retrofittest.datatype.OneDay;
 import com.raymond.retrofittest.utils.Utils;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends BaseDrawerActivity implements DataPresenter.GetDaysInterface{
+
+    private static final String TAG = "MainActivity";
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int MEDIA_TYPE_IMAGE = 4;
@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
 
     protected Uri mMediaUri;
+
+    private DaysAdapter daysAdapter;
 
 
 
@@ -62,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        daysAdapter = new DaysAdapter();
+        initView();
 
     }
 
@@ -74,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMediaUri);
+                Log.d(TAG, "uri is : " + mMediaUri.toString());
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                 //用这个判断是否有activity可以handle这个拍照事件，防止没有的情况下程序崩溃
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -82,8 +87,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        //这里居然之前忘记调用super.
+        super.onActivityResult(requestCode, resultCode, data);
+
         if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
-            mMediaUri = data.getData();
+            //之前这里搞错，以为data会返回uri,只有选择照片会返回uri,拍照的Intent中设置了MediaStore.EXTRA_OUTPUT
+            //就不会返回uri，这里直接用之前预设的uri 就可以了
+            PublishActivity.openWithPhotoUri(MainActivity.this, mMediaUri);
+            Log.d(TAG, "result ok");
+
+            //将此照片放入gallery
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            mediaScanIntent.setData(mMediaUri);
+            sendBroadcast(mediaScanIntent);
 
         }
     }
@@ -114,5 +130,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void initView(){
+
+    }
+
+    @Override
+    public void onGetDays(List<OneDay> days, Boolean ok) {
+        if(ok){
+            daysAdapter.refill(days, true);
+        }else{
+            Toast.makeText(MainActivity.this, R.string.error_network, Toast.LENGTH_SHORT).show();
+        }
     }
 }

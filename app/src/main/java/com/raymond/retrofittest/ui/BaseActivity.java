@@ -31,6 +31,7 @@ public class BaseActivity extends AppCompatActivity{
 
     public void setContentView(int layoutResID){
         super.setContentView(layoutResID);
+        bindViews();
 
     }
 

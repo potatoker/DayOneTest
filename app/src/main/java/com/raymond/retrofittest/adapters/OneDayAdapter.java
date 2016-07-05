@@ -1,9 +1,13 @@
 package com.raymond.retrofittest.adapters;
 
+import android.content.Context;
+import android.media.Image;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -11,6 +15,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.raymond.retrofittest.R;
 import com.raymond.retrofittest.datatype.Moment;
 import com.raymond.retrofittest.tools.VolleySingleton;
+import com.raymond.retrofittest.utils.Utils;
 
 import java.util.List;
 
@@ -19,12 +24,13 @@ import java.util.List;
  */
 public class OneDayAdapter extends RecyclerView.Adapter<OneDayAdapter.MomentViewHolder>{
 
-    private static final String TAG = "OneDayAdapter";
+    private static final String TAG = "DetailDayAdapter";
     private List<Moment> moments;
-    private ImageLoader imageLoader;
+    private Context context;
 
-    public OneDayAdapter(List<Moment> moments){
+    public OneDayAdapter(List<Moment> moments, Context context){
         this.moments = moments;
+        this.context = context;
     }
 
     @Override
@@ -34,20 +40,30 @@ public class OneDayAdapter extends RecyclerView.Adapter<OneDayAdapter.MomentView
         return mvh;
     }
 
-    @Override
-    public void onBindViewHolder(MomentViewHolder holder, int position) {
+//    @Override
+//    public void onBindViewHolder(MomentViewHolder holder, int position) {
+//
+//        Moment moment = moments.get(position);
+//
+//        holder.time.setText(moment.getDate().toString());
+//        holder.location.setText(moment.getLocation());
+//        holder.desc.setText(moment.getDesc());
+//
+//        imageLoader = VolleySingleton.newInstance().getImageLoader();
+//        holder.momentImg.setDefaultImageResId(R.drawable.loading);
+//        holder.momentImg.setErrorImageResId(R.drawable.fill);
+//        holder.momentImg.setImageUrl(moment.getPhotoURL(), imageLoader);
+//
+//    }
+
+    public void onBindViewHolder(MomentViewHolder holder, int position){
 
         Moment moment = moments.get(position);
 
-        holder.time.setText(moment.getDate().toString());
+        Utils.loadImage(holder.momentImg, Uri.parse(moment.getPhotoURL()), context);
         holder.location.setText(moment.getLocation());
         holder.desc.setText(moment.getDesc());
-
-        imageLoader = VolleySingleton.getInstance().getImageLoader();
-        holder.momentImg.setDefaultImageResId(R.drawable.loading);
-        holder.momentImg.setErrorImageResId(R.drawable.fill);
-        holder.momentImg.setImageUrl(moment.getPhotoURL(), imageLoader);
-
+        holder.time.setText(moment.getDate());
 
     }
 
@@ -60,19 +76,18 @@ public class OneDayAdapter extends RecyclerView.Adapter<OneDayAdapter.MomentView
 
 
     public final static class MomentViewHolder extends RecyclerView.ViewHolder{
-        NetworkImageView momentImg;
+        ImageView momentImg;
         TextView time;
         TextView location;
         TextView desc;
 
         public MomentViewHolder(View itemView){
             super(itemView);
-            momentImg = (NetworkImageView)itemView.findViewById(R.id.card_img);
+            momentImg = (ImageView)itemView.findViewById(R.id.card_img);
             time = (TextView)itemView.findViewById(R.id.card_time);
             location = (TextView)itemView.findViewById(R.id.card_location);
             desc = (TextView)itemView.findViewById(R.id.card_desc);
         }
-
     }
 
     public void refill(List<Moment> data, boolean flush){
@@ -82,5 +97,7 @@ public class OneDayAdapter extends RecyclerView.Adapter<OneDayAdapter.MomentView
             notifyDataSetChanged();
         }
     }
+
+
 
 }

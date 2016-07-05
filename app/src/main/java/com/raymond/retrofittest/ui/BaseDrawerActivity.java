@@ -6,12 +6,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.raymond.retrofittest.R;
 
@@ -19,6 +21,8 @@ import butterknife.Bind;
 import butterknife.BindDimen;
 
 public class BaseDrawerActivity extends BaseActivity {
+
+    private static final String TAG = "BaseDrawerActivity";
 
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
@@ -61,6 +65,11 @@ public class BaseDrawerActivity extends BaseActivity {
 
     private void setupHeader(){
         View headerView = navigationView.getHeaderView(0);
+        if(headerView == null){
+
+            Toast.makeText(this, getString(R.string.general_error), Toast.LENGTH_LONG).show();
+
+        }
         headerImageView = (ImageView) headerView.findViewById(R.id.headerImg);
         headerView.findViewById(R.id.globalMenuHeader).setOnClickListener(new View.OnClickListener() {
             @Override

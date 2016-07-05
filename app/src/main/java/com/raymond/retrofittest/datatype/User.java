@@ -9,16 +9,25 @@ public class User {
     private String email;
     private String uId;
 
-    private String publicId;
+    private String pwd;
     private String name;
     private String avatarURL;
+    private String currentDayId;
 
-    public User(String email, String uId, String publicId, String name, String avatarURL) {
+    public String getCurrentDayId() {
+        return currentDayId;
+    }
+
+    public void setCurrentDayId(String currentDayId) {
+        this.currentDayId = currentDayId;
+    }
+
+    public User(String email, String uId, String pwd, String name, String avatarURL) {
         this.email = email;
         this.uId = uId;
         this.name = name;
         this.avatarURL = avatarURL;
-        this.publicId = publicId;
+        this.pwd = pwd;
     }
 
     public User() {
@@ -29,12 +38,12 @@ public class User {
 
     }
 
-    public String getPublicId() {
-        return publicId;
+    public String getPwd() {
+        return pwd;
     }
 
-    public void setPublicId(String publicId) {
-        this.publicId = publicId;
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
     }
 
     public String getEmail() {
@@ -78,6 +87,5 @@ public class User {
     public static User getInstance(){
         return UserInfoHolder.instance;
     }
-
 
 }

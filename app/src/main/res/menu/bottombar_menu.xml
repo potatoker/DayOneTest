@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/myDays"
+        android:icon="@drawable/ic_face_white_24dp"
+        android:title="MyDays" />
+    <item
+        android:id="@+id/find"
+        android:icon="@drawable/ic_explore_white_24dp"
+        android:title="@string/title" />
+    <item
+        android:id="@+id/drafts"
+        android:icon="@drawable/ic_book_white_24dp"
+        android:title="Drafts"/>
+    <item
+        android:id="@+id/more"
+        android:icon="@drawable/ic_settings_white_24dp"
+        android:title="More"/>
+
+</menu>
