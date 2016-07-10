@@ -65,7 +65,7 @@ public class FindFragment extends BaseFragment implements AppBarLayout.OnOffsetC
         }
         ButterKnife.bind(this, rootView);
 
-//        nestedCoordinatorLayout.unlockNestedScrolling();
+        nestedCoordinatorLayout.unlockNestedScrolling();
 
         TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.find_tabs);
         ViewPager viewPager  = (ViewPager) rootView.findViewById(R.id.find_viewpager);
@@ -87,6 +87,8 @@ public class FindFragment extends BaseFragment implements AppBarLayout.OnOffsetC
 
         viewPager.setAdapter(new TabsAdapter(getChildFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
+
+
 
 
 

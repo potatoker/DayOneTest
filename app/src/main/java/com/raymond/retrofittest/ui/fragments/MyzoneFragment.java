@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -17,6 +18,8 @@ import com.raymond.retrofittest.adapters.DaysAdapter;
 import com.raymond.retrofittest.adapters.FakePageAdapter;
 import com.raymond.retrofittest.datatype.OneDay;
 import com.raymond.retrofittest.db.DatabaseManager;
+import com.raymond.retrofittest.ui.MyNewDaysActivity;
+import com.raymond.retrofittest.utils.Utils;
 
 import java.util.List;
 
@@ -44,6 +47,10 @@ public class MyzoneFragment extends BaseFragment{
     DaysAdapter daysAdapter;
 
     List<OneDay> openDays;
+
+    Boolean didUserTouchRecycler=false;
+    Boolean hasAnimatedDown=false;
+    Boolean hasAnimatedUp=false;
 
     @Nullable
     @Override
@@ -77,6 +84,41 @@ public class MyzoneFragment extends BaseFragment{
         recyclerView.setLayoutManager(manager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(daysAdapter);
+
+
+        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                didUserTouchRecycler = true;
+                return false;
+            }
+        });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    // Scrolling up
+                    if (didUserTouchRecycler && !hasAnimatedDown) {
+                        MyNewDaysActivity.mBottomBar.animate().translationY(Utils.dpToPx(getActivity(),100));
+                        hasAnimatedDown = true;
+                        hasAnimatedUp = false;
+                        Log.e("scroll", "up");
+                    }
+                } else {
+                    // Scrolling down
+                    if (didUserTouchRecycler && !hasAnimatedUp) {
+                        MyNewDaysActivity.mBottomBar.animate().translationY(Utils.dpToPx(getActivity(), 0));
+                        hasAnimatedUp = true;
+                        hasAnimatedDown = false;
+                        Log.e("scroll", "down");
+                    }
+                }
+            }
+
+        });
+
     }
 
     private void loadOpenDays(){

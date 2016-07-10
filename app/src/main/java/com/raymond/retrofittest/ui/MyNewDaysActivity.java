@@ -38,7 +38,7 @@ import butterknife.ButterKnife;
 public class MyNewDaysActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private static final String TAG = "MyNewDaysActivity";
-    public BottomBar mBottomBar;
+    public static BottomBar mBottomBar;
 
     private int fragNum = 0;
     private int mMaxScrollSize;
