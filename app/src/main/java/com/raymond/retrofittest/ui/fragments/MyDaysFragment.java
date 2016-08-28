@@ -14,9 +14,11 @@ import android.view.ViewGroup;
 
 import com.raymond.retrofittest.R;
 import com.raymond.retrofittest.adapters.DaysAdapter;
+import com.raymond.retrofittest.adapters.NewDaysAdapter;
 import com.raymond.retrofittest.datatype.Moment;
 import com.raymond.retrofittest.datatype.OneDay;
 import com.raymond.retrofittest.db.DatabaseManager;
+import com.raymond.retrofittest.ui.MyNewDaysActivity;
 
 import java.util.List;
 
@@ -36,7 +38,7 @@ public class MyDaysFragment extends BaseFragment {
     @Bind(R.id.my_days_fresher)
     SwipeRefreshLayout swipeRefreshLayout;
 
-    DaysAdapter daysAdapter;
+    NewDaysAdapter daysAdapter;
 
     List<OneDay> commitDays;
 
@@ -67,19 +69,21 @@ public class MyDaysFragment extends BaseFragment {
 
     public void onResume(){
         super.onResume();
-
-//        Log.d(TAG, "load my days?");
+        Log.d(TAG, "load my days?");
+//
         loadCommitDays();
     }
 
     public void initView(){
 
-        daysAdapter = new DaysAdapter(commitDays, getActivity());
+        daysAdapter = new NewDaysAdapter(commitDays, getActivity());
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(manager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(daysAdapter);
         loadCommitDays();
+
+        MyNewDaysActivity.fab.attachToRecyclerView(recyclerView);
 
 //        Log.d(TAG,"initView ok");
     }

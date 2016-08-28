@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.raymond.retrofittest.R;
+import com.raymond.retrofittest.adapters.FavaGridAdapter;
+import com.raymond.retrofittest.adapters.GridAdapter;
 import com.raymond.retrofittest.adapters.OneDayAdapter;
 import com.raymond.retrofittest.datatype.Moment;
 import com.raymond.retrofittest.datatype.User;
@@ -34,7 +37,7 @@ public class FavaFragment extends BaseFragment {
 
     List<Moment> favaMoments = new ArrayList<>();
 
-    OneDayAdapter adapter;
+    FavaGridAdapter adapter;
 
     @Bind(R.id.fava_recycler_view)
     RecyclerView recyclerView;
@@ -73,20 +76,34 @@ public class FavaFragment extends BaseFragment {
             }
         });
 
-        setRecyclerView();
-
+//        setRecyclerView();
+        initRecyclerView();
         return rootView;
     }
 
-    private void setRecyclerView(){
-        adapter  = new OneDayAdapter(favaMoments, getActivity());
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
+//    private void setRecyclerView(){
+//        adapter  = new OneDayAdapter(favaMoments, getActivity());
+//        RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity());
+//        recyclerView.setLayoutManager(manager);
+//        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        recyclerView.setAdapter(adapter);
+//
+//        refreshData();
+//
+//    }
 
+    public void onResume(){
+        super.onResume();
+        Log.d(TAG, "fava??");
         refreshData();
+    }
 
+
+    private void initRecyclerView(){
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        adapter = new FavaGridAdapter(favaMoments, getActivity());
+        recyclerView.setAdapter(adapter);
+        refreshData();
     }
 
 
@@ -98,6 +115,7 @@ public class FavaFragment extends BaseFragment {
 
         if(moments!=null){
             favaMoments = moments;
+            Log.d(TAG, ""+moments.size());
         }
 
 

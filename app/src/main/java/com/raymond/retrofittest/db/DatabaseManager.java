@@ -21,6 +21,7 @@ import java.util.List;
  */
 public class DatabaseManager {
     private static final String TAG = "DatabaseManager";
+    public static final String FAVADAY = "0000";
 
     private static TokenKeeper tk = new TokenKeeper(MyApplication.getAppContext());
 
@@ -28,10 +29,10 @@ public class DatabaseManager {
         SQLiteDatabase db = DatabaseHelper.getInstance(MyApplication.getAppContext());
         int newId = tk.getLastMomentId()+1;
 
-        Moment moment1 = getMomentById(Integer.toString(newId));
+        Moment moment1 = getMomentById(moment.getId());
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DatabaseHelper.MOMENT_ID, newId);
+//        contentValues.put(DatabaseHelper.MOMENT_ID, newId);
         contentValues.put(DatabaseHelper.MOMENT_LOCATION, moment.getLocation());
         contentValues.put(DatabaseHelper.MOMENT_DESC, moment.getDesc());
         contentValues.put(DatabaseHelper.MOMENT_TIME,moment.getDate());
@@ -57,6 +58,7 @@ public class DatabaseManager {
     }
 
 
+
     public static void addDay(OneDay day){
         SQLiteDatabase db = DatabaseHelper.getInstance(MyApplication.getAppContext());
 
@@ -68,9 +70,6 @@ public class DatabaseManager {
 //        }
 
 //        OneDay day1 = getOneDayById(day.getDayId());
-
-
-
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseHelper.DAY_ID, day.getDayId());
 
@@ -116,7 +115,6 @@ public class DatabaseManager {
                 + " = " + DatabaseHelper.FLAG_DAY_CURRENT;
 
         db.delete(DatabaseHelper.TABLE_DAYS, DatabaseHelper.DAY_FLAG + " = ?", new String[]{Integer.toString(DatabaseHelper.FLAG_DAY_CURRENT)});
-
     }
 
 
@@ -185,6 +183,8 @@ public class DatabaseManager {
 
     }
 
+
+
     public static ArrayList<Moment> getFavaMoments(String uid){
         SQLiteDatabase db = DatabaseHelper.getInstance(MyApplication.getAppContext());
 
@@ -194,10 +194,14 @@ public class DatabaseManager {
                 + " = " + uid
                 + " and " + DatabaseHelper.MOMENT_FLAG
                 + " = " + DatabaseHelper.FLAG_MOMENT_FAVA;
-        ArrayList<Moment> moments = parseMomentCursor(db.rawQuery(sql, null));
 
+        String sql2 = "select * from "
+                + DatabaseHelper.TABLE_MOMENTS
+                + " where " + DatabaseHelper.MOMENT_FLAG
+                + " = " + DatabaseHelper.FLAG_MOMENT_FAVA;
+
+        ArrayList<Moment> moments = parseMomentCursor(db.rawQuery(sql2, null));
         return moments;
-
     }
 
 
@@ -249,6 +253,23 @@ public class DatabaseManager {
         else return null;
     }
 
+    public static void deleteDay(OneDay day){
+        ArrayList<Moment> moments = day.getMoments();
+
+        for(Moment moment: moments){
+            deleteMoment(moment);
+        }
+
+        SQLiteDatabase db = DatabaseHelper.getInstance(MyApplication.getAppContext());
+
+        db.delete(DatabaseHelper.TABLE_DAYS, DatabaseHelper.DAY_ID + " = ?", new String[]{day.getDayId()});
+    }
+
+    public static void deleteMoment(Moment moment){
+        deleteMoment(moment.getId());
+        Utils.deletePhotoByURI(moment.getPhotoURL());
+    }
+
 
     public static void deleteMoment(String momentId){
         SQLiteDatabase db = DatabaseHelper.getInstance(MyApplication.getAppContext());
@@ -257,7 +278,6 @@ public class DatabaseManager {
                 + DatabaseHelper.TABLE_MOMENTS
                 + " where " + DatabaseHelper.MOMENT_ID
                 + " = " + momentId;
-
         db.delete(DatabaseHelper.TABLE_MOMENTS, DatabaseHelper.MOMENT_ID + " = ?", new String[]{momentId});
     }
 

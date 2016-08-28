@@ -12,7 +12,34 @@ public class User {
     private String pwd;
     private String name;
     private String avatarURL;
+    private String avatarURI;
     private String currentDayId;
+    private String desc;
+    private String motto;
+
+    public String getAvatarURI() {
+        return avatarURI;
+    }
+
+    public void setAvatarURI(String avatarURI) {
+        this.avatarURI = avatarURI;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getMotto() {
+        return motto;
+    }
+
+    public void setMotto(String motto) {
+        this.motto = motto;
+    }
 
     public String getCurrentDayId() {
         return currentDayId;
@@ -34,8 +61,6 @@ public class User {
         this.email = "";
         this.uId = "";
         this.name = "";
-        this.avatarURL = "";
-
     }
 
     public String getPwd() {

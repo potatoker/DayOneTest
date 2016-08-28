@@ -11,9 +11,15 @@
 
 
         <android.support.v7.widget.RecyclerView
+
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="2dp"
+            android:paddingRight="2dp"
+            android:paddingBottom="2dp"
+            android:paddingLeft="1dp"
             android:id="@+id/fava_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

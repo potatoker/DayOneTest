@@ -77,7 +77,7 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.OneDayViewHold
         Utils.loadImage(holder.big, Uri.parse(moments.get(0).getPhotoURL()), context, context.getResources().getDimensionPixelSize(R.dimen.all_photo_size));
         Utils.loadImage(holder.ban1, Uri.parse(moments.get(1).getPhotoURL()), context, context.getResources().getDimensionPixelSize(R.dimen.thumb_photo_size));
         Utils.loadImage(holder.ban2, Uri.parse(moments.get(2).getPhotoURL()), context, context.getResources().getDimensionPixelSize(R.dimen.thumb_photo_size));
-        Utils.loadImage(holder.ban3, Uri.parse(moments.get(3).getPhotoURL()), context, context.getResources().getDimensionPixelSize(R.dimen.thumb_photo_size));
+//        Utils.loadImage(holder.ban3, Uri.parse(moments.get(3).getPhotoURL()), context, context.getResources().getDimensionPixelSize(R.dimen.thumb_photo_size));
         holder.titleView.setText(oneDay.getDayTitle());
 
         holder.desc.setText("sadfasdfaszdfadf"+oneDay.getDesc());

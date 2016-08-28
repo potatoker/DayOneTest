@@ -1,5 +1,7 @@
 package com.raymond.retrofittest;
 
+import android.graphics.Bitmap;
+import android.util.Base64;
 import android.util.Log;
 
 import com.android.volley.VolleyError;
@@ -8,6 +10,7 @@ import com.raymond.retrofittest.datatype.OneDay;
 import com.raymond.retrofittest.net.NetworkInterface;
 import com.raymond.retrofittest.net.ResponseListener;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 /**
@@ -67,8 +70,8 @@ public class DataPresenter {
                         q.onPostMoment(response, true);
                     }
                 });
-
     }
+
 
     public static void postMoment(Moment moment, String dayId, final PostMomentInterface q){
         NetworkInterface.PostMoment(moment, dayId,
@@ -86,6 +89,40 @@ public class DataPresenter {
                 });
     }
 
+    public static void postMomentWithImg(Moment moment, String dayId, String img, final PostMomentWithImgInterface q){
+
+    }
+
+    public static void GetMoments(String uid, final GetMoments q){
+        NetworkInterface.GetMoments(uid, new ResponseListener<List<Moment>>() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, error.toString());
+                q.onGetMoments(null, false);
+            }
+
+            @Override
+            public void onResponse(List<Moment> response) {
+                q.onGetMoments(response, true);
+            }
+        });
+    }
+
+    public static void GetStamps(String uid, final GetStamps q){
+        NetworkInterface.GetTimeStamps(uid, new ResponseListener<List<String>>(){
+
+            @Override
+            public void onResponse(List<String> response) {
+                q.onGetStamps(response,true);
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, error.toString());
+                q.onGetStamps(null, false);
+            }
+        });
+    }
 
 
 
@@ -104,6 +141,18 @@ public class DataPresenter {
 
     public interface PostMomentInterface{
         void onPostMoment(String flag, Boolean ok);
+    }
+
+    public interface PostMomentWithImgInterface{
+
+    }
+
+    public interface GetMoments{
+        void onGetMoments(List<Moment> moments, Boolean ok);
+    }
+
+    public interface  GetStamps{
+        void onGetStamps(List<String> dates, Boolean ok);
     }
 
 }

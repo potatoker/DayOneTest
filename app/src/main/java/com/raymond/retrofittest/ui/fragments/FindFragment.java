@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -46,8 +47,9 @@ public class FindFragment extends BaseFragment implements AppBarLayout.OnOffsetC
     public NestedCoordinatorLayout parentCor;
     public AppBarLayout appbarLayout;
 
-    @Bind(R.id.nested_coord)
-    NestedCoordinatorLayout nestedCoordinatorLayout;
+//    @Bind(R.id.nest_cord)
+//    NestedCoordinatorLayout nestedCoordinatorLayout;
+    public static NestedCoordinatorLayout nestedCoordinatorLayout;
 
     View rootView;
 
@@ -64,6 +66,7 @@ public class FindFragment extends BaseFragment implements AppBarLayout.OnOffsetC
             rootView = inflater.inflate(R.layout.fragment_find, null);
         }
         ButterKnife.bind(this, rootView);
+        nestedCoordinatorLayout = (NestedCoordinatorLayout) rootView.findViewById(R.id.nest_cord);
 
         nestedCoordinatorLayout.unlockNestedScrolling();
 
@@ -80,6 +83,7 @@ public class FindFragment extends BaseFragment implements AppBarLayout.OnOffsetC
 //            }
 //        });
 
+//        toolbar.setTitle("sdfasdfsf");
         appbarLayout.addOnOffsetChangedListener(this);
 //        appbarLayout.addOnOffsetChangedListener(parentActivity);
 

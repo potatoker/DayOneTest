@@ -1,27 +1,48 @@
 package com.raymond.retrofittest.ui;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 
-import android.support.design.widget.FloatingActionButton;
+
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPropertyAnimatorListener;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.melnykov.fab.FloatingActionButton;
 import com.raymond.retrofittest.DataPresenter;
 import com.raymond.retrofittest.EnvVariable;
 import com.raymond.retrofittest.R;
 import com.raymond.retrofittest.datatype.Moment;
 
 import com.raymond.retrofittest.db.DatabaseHelper;
+import com.raymond.retrofittest.db.DatabaseManager;
+import com.raymond.retrofittest.service.AlarmReceiver;
+import com.raymond.retrofittest.service.BitmapGetAsync;
 import com.raymond.retrofittest.ui.fragments.FindFragment;
 import com.raymond.retrofittest.ui.fragments.NavigationManager;
 import com.raymond.retrofittest.utils.Utils;
@@ -30,12 +51,16 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
 
+import java.lang.ref.WeakReference;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MyNewDaysActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
+public class MyNewDaysActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener{
 
     private static final String TAG = "MyNewDaysActivity";
     public static BottomBar mBottomBar;
@@ -43,22 +68,35 @@ public class MyNewDaysActivity extends AppCompatActivity implements AppBarLayout
     private int fragNum = 0;
     private int mMaxScrollSize;
 
+    private static final Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();
+    private boolean mIsAnimatingOut = false;
+
+
+
     public FindFragment currentFragment=null;
     private AppBarLayout findAppBar;
 
-    @Bind(R.id.drafts_fab)
-    FloatingActionButton fab;
+//    @Bind(R.id.drafts_fab)
+//    FloatingActionButton fab;
 
-    @Bind(R.id.myScrollingContent)
-    NestedScrollView nestedScrollView;
+    public static FloatingActionButton fab;
 
-    public NestedCoordinatorLayout parentCoord;
+//    @Bind(R.id.myScrollingContent)
+//    NestedScrollView nestedScrollView;
+
+    public static CoordinatorLayout parentCoord;
     public NestedCoordinatorLayout childCoord;
 
 
     private NavigationManager navigationManager;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     protected Uri mMediaUri;
+
+    //声明AMapLocationClient类对象
+    public AMapLocationClient mLocationClient = null;
+    //声明定位回调监听器
+    public AMapLocationListener mLocationListener;
+    public AMapLocationClientOption mLocationOption = null;
 
 
     @Override
@@ -68,6 +106,10 @@ public class MyNewDaysActivity extends AppCompatActivity implements AppBarLayout
 //        setContentView(R.layout.no_shy_main);
 
         ButterKnife.bind(this);
+
+        NestedScrollView nestedScrollView = (NestedScrollView)findViewById(R.id.myScrollingContent);
+
+        fab = (FloatingActionButton)findViewById(R.id.fab);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +122,7 @@ public class MyNewDaysActivity extends AppCompatActivity implements AppBarLayout
 
         nestedScrollView.setFillViewport(true);
 
-        parentCoord = (NestedCoordinatorLayout) findViewById(R.id.myCoordinator);
+        parentCoord = (CoordinatorLayout) findViewById(R.id.myCoordinator);
 
         mBottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.myCoordinator),
                 findViewById(R.id.myScrollingContent), savedInstanceState);
@@ -90,15 +132,18 @@ public class MyNewDaysActivity extends AppCompatActivity implements AppBarLayout
         mBottomBar.setItemsFromMenu(R.menu.bottombar_menu, new OnMenuTabClickListener() {
             @Override
             public void onMenuTabSelected(@IdRes int menuItemId) {
-                switch (menuItemId){
+                switch (menuItemId) {
                     case R.id.myDays:
+//                        parentCoord.unlockNestedScrolling();
                         navigationManager.startMydays();
 //                        fab.hide();
                         fragNum = 0;
                         break;
 
                     case R.id.find:
-                        currentFragment = navigationManager.startFind();
+//                        parentCoord.lockNestedScrolling();
+                        navigationManager.startFind();
+
 
 //                        findAppBar = currentFragment.getAppbarLayout();
 
@@ -110,12 +155,14 @@ public class MyNewDaysActivity extends AppCompatActivity implements AppBarLayout
                         break;
 
                     case R.id.drafts:
+//                        parentCoord.unlockNestedScrolling();
                         navigationManager.startDrafts();
 //                        fab.show();
                         fragNum = 2;
                         break;
 
                     case R.id.more:
+//                        parentCoord.unlockNestedScrolling();
                         navigationManager.startMore();
 //                        fab.hide();
                         fragNum = 3;
@@ -137,14 +184,79 @@ public class MyNewDaysActivity extends AppCompatActivity implements AppBarLayout
         mBottomBar.mapColorForTab(3, "#694A43");
 
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window w = getWindow(); // in Activity's onCreate() for instance
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
 
-//        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-//        Date date = new Date();
-//        Moment moment = new Moment("fakeUrl", dateFormat.format(date), "fakeDesc", "fakeLocation");
-//        DataPresenter.postMoment2(moment, "01", this);
+
+
 
 //        deleteDatabase(DatabaseHelper.DB_NAME);
+
+
+//        mBottomBar.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+//            @Override
+//            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+//
+//                if(top < oldTop && fab.isShown()){
+//                    fab.hide();
+//                    Log.d(TAG,"animate in");
+//                }else if(top > oldTop && !fab.isShown()){
+//                    fab.show();
+//                    Log.d(TAG, "animate out");
+//                }
+//
+//            }
+//        });
+
+//        mLocationListener = new AMapLocationListener() {
+//            @Override
+//            public void onLocationChanged(AMapLocation amapLocation) {
+//                if (amapLocation != null) {
+//                    if (amapLocation.getErrorCode() == 0) {
+////可在其中解析amapLocation获取相应内容。
+//                        String address = amapLocation.getAddress();//地址，如果option中设置isNeedAddress为false，则没有此结果，网络定位结果中会有地址信息，GPS定位不返回地址信息。
+//
+//                        String city = amapLocation.getDistrict();//城区信息
+//                        String street = amapLocation.getStreet();//街道信息
+//
+//                        Log.d(TAG, address);
+//                        Log.d(TAG,city);
+//                        Log.d(TAG, street);
+//
+//                        Log.d(TAG,"??????????????????");
+//
+//
+//                    }else {
+//                        //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
+//                        Log.e("AmapError","location Error, ErrCode:"
+//                                + amapLocation.getErrorCode() + ", errInfo:"
+//                                + amapLocation.getErrorInfo());
+//                    }
+//                }
+//            }
+//        };
+
+
+        Intent in = getIntent();
+
+        if(in !=null) {
+
+            String text = in.getStringExtra(AlarmReceiver.KEY_COMMAND);
+
+            if(text!=null) {
+
+                if (text.equals(AlarmReceiver.COMMAND_TAKE_PHOTO)) {
+                    dispatchTakePictureIntent();
+                }
+            }
+        }
+
     }
+
+
+
 
 
 //    public void setUpBottomBar(CoordinatorLayout coordinatorLayout){
@@ -197,29 +309,33 @@ public class MyNewDaysActivity extends AppCompatActivity implements AppBarLayout
             }
         }
     }
-
+//
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
 
-        if (fragNum == 1) {
-            if (mMaxScrollSize == 0)
-                mMaxScrollSize = appBarLayout.getTotalScrollRange();
-
-            if (Math.abs(verticalOffset) == mMaxScrollSize) {
-                parentCoord.unlockNestedScrolling();
-                Log.d(TAG, " ==: " + verticalOffset);
-
-            } else if (Math.abs(verticalOffset) < mMaxScrollSize) {
-                childCoord.unlockNestedScrolling();
-                parentCoord.lockNestedScrolling();
-
-                Log.d(TAG, "<:"+verticalOffset);
-            }
-        }
+//        if (fragNum == 1) {
+//            if (mMaxScrollSize == 0)
+//                mMaxScrollSize = appBarLayout.getTotalScrollRange();
+//
+//            if (Math.abs(verticalOffset) == mMaxScrollSize) {
+//                parentCoord.unlockNestedScrolling();
+//                Log.d(TAG, " ==: " + verticalOffset);
+//
+//            } else if (Math.abs(verticalOffset) < mMaxScrollSize) {
+//                childCoord.unlockNestedScrolling();
+//                parentCoord.lockNestedScrolling();
+//
+//                Log.d(TAG, "<:"+verticalOffset);
+//            }
+//        }
     }
+
 
 
     public AppBarLayout.OnOffsetChangedListener listener(){
         return this;
     }
+
+
+
 }

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.raymond.retrofittest.R;
+import com.raymond.retrofittest.ui.myoneday.NewFindFragment;
 
 
 /**
@@ -19,7 +20,14 @@ public class NavigationManager {
         this.mFragmentManager = fragmentManager;
     }
 
-
+    private void open2(Fragment fragment){
+        if(mFragmentManager!=null){
+            mFragmentManager.beginTransaction()
+                    .replace(R.id.main_container,fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+    }
 
 
     private void open(Fragment fragment){
@@ -50,27 +58,27 @@ public class NavigationManager {
 
     public Fragment startMydays(){
         Fragment fragment = MyDaysFragment.newInstance();
-        openAsRoot(fragment);
+        open2(fragment);
         return fragment;
     }
 
-    public FindFragment startFind(){
-        FindFragment fragment = FindFragment.newInstance();
-        openAsRoot(fragment);
+    public Fragment startFind(){
+        RealFindFragment fragment = RealFindFragment.newInstance();
+        open2(fragment);
         return fragment;
 
     }
 
     public Fragment startDrafts(){
         Fragment fragment = DraftsFragment.newInstance();
-        openAsRoot(fragment);
+        open2(fragment);
         return fragment;
 
     }
 
     public Fragment startMore(){
         Fragment fragment = MoreFragement.newInstance();
-        openAsRoot(fragment);
+        open2(fragment);
         return fragment;
     }
 

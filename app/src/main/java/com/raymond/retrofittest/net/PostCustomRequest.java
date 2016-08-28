@@ -49,7 +49,6 @@ public class PostCustomRequest<T> extends Request<T> {
             //获取http 头部中的charset信息（如用的是utf-8），用以解析byte成字符串
             result = gson.fromJson(jsonString, type);
             return Response.success(result, HttpHeaderParser.parseCacheHeaders(response));
-            //这里关于后面这个cache的部分不太懂
         }catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
         }

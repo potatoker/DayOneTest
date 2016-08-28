@@ -1,6 +1,8 @@
 package com.raymond.retrofittest.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.raymond.retrofittest.Message;
 import com.raymond.retrofittest.R;
 import com.raymond.retrofittest.datatype.Moment;
@@ -23,6 +29,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.io.File;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -44,10 +52,17 @@ public class PublishActivity extends BaseActivity {
     @Bind(R.id.save_to_fav)
     Button saveFava;
 
+    @Bind(R.id.publish_position)
+    EditText positionEditText;
+
     @Bind(R.id.pub_desc)
     EditText pubDesc;
 
     DatabaseManager dbm;
+
+    public AMapLocationClient mLocationClient = null;
+    public AMapLocationClientOption mLocationOption = null;
+    AMapLocationListener mAMapLocationListener = null;
 
 
     public static void openWithPhotoUri(Activity openingActivity, Uri photoUri){
@@ -60,7 +75,6 @@ public class PublishActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish);
-
         dbm = new DatabaseManager();
 
         photoSize = getResources().getDimensionPixelSize(R.dimen.all_photo_size);
@@ -89,6 +103,62 @@ public class PublishActivity extends BaseActivity {
             }
         });
 
+        initPostionService();
+
+        mLocationClient.setLocationOption(mLocationOption);
+        //启动定位
+        mLocationClient.startLocation();
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("Really Exit?")
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        File file = new File(photoUri.getPath());
+                        file.delete();
+                        if(file.exists()){
+                            try {
+                                file.getCanonicalFile().delete();
+                                if (file.exists()) {
+                                    getApplicationContext().deleteFile(file.getName());
+                                }
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                        PublishActivity.super.onBackPressed();
+
+                    }
+                }).create().show();
+    }
+
+
+    public void initPostionService(){
+        mLocationClient = new AMapLocationClient(getApplicationContext());
+
+        mLocationOption = new AMapLocationClientOption();
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        mLocationOption.setOnceLocationLatest(true);
+        mAMapLocationListener = new AMapLocationListener(){
+            @Override
+            public void onLocationChanged(AMapLocation amapLocation) {
+                if (amapLocation.getErrorCode() == 0) {
+                    //可在其中解析amapLocation获取相应内容。
+                    positionEditText.setText(amapLocation.getAddress());
+                }else {
+                    //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
+                    Log.e("AmapError","location Error, ErrCode:"
+                            + amapLocation.getErrorCode() + ", errInfo:"
+                            + amapLocation.getErrorInfo());
+                }
+            }
+        };
+        mLocationClient.setLocationListener(mAMapLocationListener);
     }
 
     private void loadImage(){
@@ -138,16 +208,15 @@ public class PublishActivity extends BaseActivity {
 //            day.setFlag(DatabaseHelper.FLAG_DAY_NO_COMMIT);
 
             Log.d(TAG, "get:" + day.getTime());
-
             DatabaseManager.addDay(day);
-
             currentDay = DatabaseManager.getCurrentDay();
-
         }
+
+
 
         Moment moment = new Moment();
         moment.setPhotoURL(photoUri.toString());
-
+        moment.setLocation(positionEditText.getText().toString());
         moment.setDesc(pubDesc.getText().toString());
 
         moment.setDate(Utils.getCurrentTime());
@@ -172,9 +241,12 @@ public class PublishActivity extends BaseActivity {
         moment.setPhotoURL(photoUri.toString());
         moment.setDesc(pubDesc.getText().toString());
         moment.setDate(Utils.getCurrentTime());
+        moment.setDayId(DatabaseManager.FAVADAY);
         moment.setFavaFlag(DatabaseHelper.FLAG_MOMENT_FAVA);
+        moment.setLocation(positionEditText.getText().toString());
+        moment.setUid(User.getInstance().getuId());
+        moment.setMoment_snyc(Utils.getTimeStamp2());
         DatabaseManager.addMoment(moment);
-
         finish();
     }
 

@@ -1,7 +1,11 @@
 package com.raymond.retrofittest.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +25,9 @@ import com.raymond.retrofittest.datatype.OneDay;
 import com.raymond.retrofittest.datatype.User;
 import com.raymond.retrofittest.db.DatabaseHelper;
 import com.raymond.retrofittest.db.DatabaseManager;
+import com.raymond.retrofittest.ui.DayPublish;
+import com.raymond.retrofittest.ui.MomentEditDialog;
+import com.raymond.retrofittest.ui.PublishActivity;
 import com.raymond.retrofittest.utils.Utils;
 
 
@@ -40,16 +48,17 @@ public class DayAdapterWithFooter extends RecyclerView.Adapter<RecyclerView.View
 
     private static final int TYPE_ITEM = 1;
     private static final int TYPE_FOOTER = 2;
+    private static final int TYPE_HEADER = 3;
 
 
     private List<Moment> moments;
     private Context context;
     private boolean flag=false;
 
-
     public DayAdapterWithFooter(List<Moment> moments, Context context){
         this.moments = moments;
         this.context = context;
+
 
         if(moments == null){
             this.moments = new ArrayList<>();
@@ -69,7 +78,6 @@ public class DayAdapterWithFooter extends RecyclerView.Adapter<RecyclerView.View
             FooterViewHolder footerViewHolder = new FooterViewHolder(footerView);
             return footerViewHolder;
         }
-
         return null;
 
     }
@@ -78,28 +86,82 @@ public class DayAdapterWithFooter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         if(holder instanceof MomentViewHolder){
-            Moment moment = moments.get(position);
+            final Moment moment = moments.get(position);
 
             MomentViewHolder itemHolder = (MomentViewHolder) holder;
             Utils.loadImage(itemHolder.momentImg, Uri.parse(moment.getPhotoURL()), context);
             itemHolder.location.setText(moment.getLocation());
             itemHolder.desc.setText(moment.getDesc());
             itemHolder.time.setText(moment.getDate());
+
+            itemHolder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Title");
+                    builder.setItems(new CharSequence[]
+                                    {"删除", "编辑", "分享"},
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // The 'which' argument contains the index position
+                                    // of the selected item
+                                    switch (which) {
+                                        case 0:
+                                            DatabaseManager.deleteMoment(moment);
+                                            refill(moments,true);
+                                            dialog.dismiss();
+                                            break;
+                                        case 1:
+                                            MomentEditDialog momentEditDialog = new MomentEditDialog(context,moment);
+                                            momentEditDialog.show();
+                                            dialog.dismiss();
+                                            break;
+                                        case 2:
+                                            dialog.cancel();
+                                            break;
+                                    }
+
+                                }
+                            });
+                    builder.create().show();
+
+                    return false;
+                }
+            });
+
         }
         else if(holder instanceof FooterViewHolder){
 
             FooterViewHolder footerViewHolder = (FooterViewHolder) holder;
 
+//            footerViewHolder.saveButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                    if(moments.size()<2){
+//                        Toast.makeText(context, R.string.error_network, Toast.LENGTH_SHORT).show();
+//                    }
+//                    else{
+//                        Log.d(TAG, "commit");
+//                        commitCurrentDay();
+//                    }
+//                }
+//            });
+
+
             footerViewHolder.saveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    if(moments.size()<2){
+                    if(moments.size()<3){
                         Toast.makeText(context, R.string.error_network, Toast.LENGTH_SHORT).show();
                     }
                     else{
                         Log.d(TAG, "commit");
-                        commitCurrentDay();
+                        Intent intent = new Intent(context, DayPublish.class);
+                        context.startActivity(intent);
                     }
                 }
             });
@@ -122,6 +184,7 @@ public class DayAdapterWithFooter extends RecyclerView.Adapter<RecyclerView.View
         TextView time;
         TextView location;
         TextView desc;
+        CardView cardView;
 
         public MomentViewHolder(View itemView) {
             super(itemView);
@@ -129,6 +192,7 @@ public class DayAdapterWithFooter extends RecyclerView.Adapter<RecyclerView.View
             time = (TextView) itemView.findViewById(R.id.card_time);
             location = (TextView) itemView.findViewById(R.id.card_location);
             desc = (TextView) itemView.findViewById(R.id.card_desc);
+            cardView = (CardView) itemView.findViewById(R.id.card_view);
         }
     }
 
@@ -148,7 +212,7 @@ public class DayAdapterWithFooter extends RecyclerView.Adapter<RecyclerView.View
     public int getItemViewType (int position) {
         if(isPositionFooter (position)) {
             return TYPE_FOOTER;
-        }
+        }else
         return TYPE_ITEM;
     }
 
@@ -200,4 +264,6 @@ public class DayAdapterWithFooter extends RecyclerView.Adapter<RecyclerView.View
             refill(null, true);
         }
     }
+
+
 }

@@ -23,6 +23,7 @@ public class TokenKeeper {
     private static final String KEY_NAME =  "name";
     private static final String KEY_LAST_DAY_ID = "last_day_id";
     private static final String KEY_LAST_MOMENT_ID = "last_moment_id";
+    private static final String ALARM_OPEN="alarm_open";
 
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -63,6 +64,17 @@ public class TokenKeeper {
         editor.putInt(KEY_LAST_MOMENT_ID, momentId);
         editor.commit();
     }
+
+    public void setAlarmOpen(Boolean bool){
+        editor.putBoolean(ALARM_OPEN, bool);
+        editor.commit();
+    }
+
+    public Boolean getAlarmOpen(){
+        return pref.getBoolean(ALARM_OPEN, false);
+    }
+
+
 
     public int getLastDayId(){
         return pref.getInt(KEY_LAST_DAY_ID, -1);

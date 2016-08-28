@@ -1,6 +1,11 @@
 package com.raymond.retrofittest.net;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.widget.ImageView;
+
 import com.android.volley.Request;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -8,7 +13,10 @@ import com.raymond.retrofittest.EnvVariable;
 import com.raymond.retrofittest.datatype.Moment;
 import com.raymond.retrofittest.datatype.OneDay;
 import com.raymond.retrofittest.tools.VolleySingleton;
+import com.raymond.retrofittest.utils.Utils;
 
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,17 +31,19 @@ public class NetworkInterface {
     public static final String USER_ID = "user_id";
     public static final String MOMENT = "moment";
     public static final String DAY_ID = "day_id";
-
+    public static final String IMAGE_STRING = "image_string";
+    public static final String UID = "uid";
 
 
 
     //服务器接口URL
 
-    public static final String BASE_API_URL = "http://192.168.18.30:8088/one_day/controllers";
+    public static final String BASE_API_URL = "http://192.168.18.14:8088/one_day/controllers";
     public static final String API_REQUEST_DAYS = BASE_API_URL + "request_days.php";
-    public static final String API_POST_MOMENT_TEST = "http://192.168.18.13:5000/moments";
-    public static final String API_POST_MOMENT = "http://192.168.18.13:5000/post_moment";
-
+    public static final String API_POST_MOMENT_TEST = "http://192.168.18.14:5000/moments";
+    public static final String API_POST_MOMENT = "http://192.168.18.14:5000/post_moment";
+    public static final String API_POST_GET_MOMENTS = "http://192.168.18.14:5000/all_moments";
+    public static final String API_GET_TIMESTAMPS ="http://192.168.18.14:5000/all_moments";
 
     //返回值
     public static final String POST_SUCCESS = "ok";
@@ -86,5 +96,43 @@ public class NetworkInterface {
 
         VolleySingleton.getInstance().addToRequestQueue(request);
     }
+
+
+    public static void GetMoments(String uid, ResponseListener listener){
+        Gson gson = new Gson();
+        Map<String,String> params = new HashMap<>();
+        params.put(UID, uid);
+        Request request = new PostCustomRequest(API_POST_GET_MOMENTS,
+                params, new TypeToken<List<Moment>>(){}.getType(),
+                listener);
+
+        VolleySingleton.getInstance().addToRequestQueue(request);
+    }
+
+    public static void GetTimeStamps(String uid, ResponseListener listener){
+        Map<String, String> params = new HashMap<>();
+        params.put(UID, uid);
+        Request request = new PostCustomRequest(API_GET_TIMESTAMPS,
+                params, new TypeToken<List<String>>(){}.getType(),
+                listener);
+
+        VolleySingleton.getInstance().addToRequestQueue(request);
+    }
+
+
+
+//    public static void PostMomentWithImg(Moment moment, String dayId, String img,ResponseListener listener){
+//        Gson gson = new Gson();
+//        Map<String, String> params = new HashMap<>();
+//        params.put(IMAGE_STRING, img);
+//        params.put(DAY_ID, dayId);
+//        Request request = new PostCustomRequest(API_POST_MOMENT_TEST,
+//                params, new TypeToken<List<Moment>>(){}.getType(),
+//                listener);
+//        VolleySingleton.getInstance().addToRequestQueue(request);
+//    }
+
+
+
 
 }

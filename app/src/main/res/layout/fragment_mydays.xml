@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#29ADF4"
+    android:background="#EEEEEE"
     android:paddingBottom="40dp"
     >
 
@@ -15,8 +15,9 @@
             android:id="@+id/my_days_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#DE4846"
+            android:background="#EEEEEE"
             android:layout_marginBottom="40dp"
+
             />
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

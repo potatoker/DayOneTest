@@ -3,10 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
 
-    tools:context=".ui.MyNewDaysActivity">
+    tools:context=".ui.MyNewDaysActivity"
+    android:fitsSystemWindows="true">
 
-    <com.raymond.retrofittest.views.NestedCoordinatorLayout
+    <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/myCoordinator"
         android:layout_width="match_parent"
@@ -29,14 +32,27 @@
         </android.support.v4.widget.NestedScrollView>
 
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/drafts_fab"
+        <!--<android.support.design.widget.FloatingActionButton-->
+            <!--android:id="@+id/drafts_fab"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="bottom|end"-->
+            <!--android:layout_marginRight="@dimen/fab_margin"-->
+            <!--android:layout_marginBottom="@dimen/fab_bottom_margin"-->
+            <!--android:src ="@drawable/ic_add_photo_24dp"-->
+            <!--/>-->
+
+
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            android:src ="@drawable/ic_add_photo_24dp"/>
+            android:layout_gravity="bottom|right"
 
-    </com.raymond.retrofittest.views.NestedCoordinatorLayout>
+            android:layout_marginRight="@dimen/fab_margin"
+            android:layout_marginBottom="@dimen/fab_bottom_margin"
+            android:src="@drawable/ic_add_photo_24dp" />
+
+    </android.support.design.widget.CoordinatorLayout>
 
 </RelativeLayout>

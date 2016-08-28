@@ -17,6 +17,7 @@ import com.raymond.retrofittest.adapters.DayAdapterWithFooter;
 import com.raymond.retrofittest.datatype.Moment;
 import com.raymond.retrofittest.datatype.OneDay;
 import com.raymond.retrofittest.db.DatabaseManager;
+import com.raymond.retrofittest.ui.MyNewDaysActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,11 @@ public class CurrentDayFragment extends BaseFragment {
         loadCurrentDay();
     }
 
+    public void onPause(){
+        super.onPause();
+        loadCurrentDay();
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
 
@@ -82,10 +88,11 @@ public class CurrentDayFragment extends BaseFragment {
         adapter = new DayAdapterWithFooter(current_day, getActivity());
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(manager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
         loadCurrentDay();
+        MyNewDaysActivity.fab.attachToRecyclerView(recyclerView);
 
     }
 

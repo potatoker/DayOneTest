@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.raymond.retrofittest.R;
+import com.raymond.retrofittest.ui.MyNewDaysActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +90,8 @@ public class DraftsFragment extends BaseFragment{
 //        adapter.addFragment(TestFragment.newInstance(), "current day");
 //        adapter.addFragment(new FavaFragment(), "favorite moments");
         viewPager.setAdapter(adapter);
+
+
     }
 
     public static class MyAdapter extends FragmentPagerAdapter {

@@ -2,6 +2,7 @@ package com.raymond.retrofittest.datatype;
 
 import android.graphics.Bitmap;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
@@ -10,7 +11,11 @@ import java.util.Date;
  * Created by raymond on 16/3/12.
  */
 public class Moment {
-    @SerializedName("_id")
+
+
+    public static final String IMG_PIXEL_NULL = "null";
+
+    @SerializedName("moment_id")
     private String id;
 
     @SerializedName("photo_url")
@@ -20,11 +25,21 @@ public class Moment {
 
     private String desc;
 
+    @SerializedName("day_id")
     private String dayId;
+
     private String location;
     private String uid;
+
+
+
+    @SerializedName("img_string")
+    private String imgString=IMG_PIXEL_NULL;
+
+
     private int moment_snyc=0;
 
+    @SerializedName("fava_flag")
     private int favaFlag=0;
 
 
@@ -73,6 +88,13 @@ public class Moment {
         this.dayId = dayId;
     }
 
+    public Moment(String photoURL, String date, String desc, String location) {
+        this.photoURL = photoURL;
+        this.date = date;
+        this.desc = desc;
+        this.location = location;
+    }
+
     public String getDayId() {
         return dayId;
     }
@@ -118,5 +140,23 @@ public class Moment {
 
     public String getDesc() {
         return desc;
+    }
+
+    public String toJson() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
+
+    public static Moment fromJson(String json) {
+        Gson gson = new Gson();
+        return gson.fromJson(json, Moment.class);
+    }
+
+    public String getImgString() {
+        return imgString;
+    }
+
+    public void setImgString(String imgString) {
+        this.imgString = imgString;
     }
 }
