@@ -19,8 +19,6 @@ import com.raymond.retrofittest.datatype.User;
 import com.raymond.retrofittest.ui.DayShowActivity;
 import com.raymond.retrofittest.utils.Utils;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,21 +95,31 @@ public class MyZoneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             HeaderViewHeader headerViewHeader = (HeaderViewHeader)holder2;
             if(user !=null) {
 
-                if(user.getAvatarURI()!=null){
+                if(user.getAvataruri()!=null){
                     Utils.loadImage(headerViewHeader.profileImg,
-                            Uri.parse(user.getAvatarURI()), context, 200);
+                            Uri.parse(user.getAvataruri()), context, 200);
                 }else{
                     Utils.loadImageFromNet(headerViewHeader.profileImg,
-                            user.getAvatarURL(), context, 200);
+                            user.getAvatarurl(), context, 200);
 
-                    Utils.imageDownload(context, user.getAvatarURL());
+                    Utils.imageDownload(context, user.getAvatarurl());
                 }
 
-                headerViewHeader.name.setText(user.getName());
-                headerViewHeader.desc.setText(user.getDesc());
-                headerViewHeader.email.setText(user.getEmail());
+//                headerViewHeader.name.setText(user.getName());
+
+                headerViewHeader.name.setText(User.getInstance().getName());
+//                headerViewHeader.desc.setText(user.getDesc());
+                headerViewHeader.desc.setText(User.getInstance().getUid());
+//                headerViewHeader.email.setText(user.getEmail());
+                headerViewHeader.email.setText(User.getInstance().getEmail());
                 headerViewHeader.motto.setText(user.getMotto());
+            }else {
+                headerViewHeader.name.setText(User.getInstance().getName());
+                headerViewHeader.desc.setText(User.getInstance().getUid());
+
+                headerViewHeader.email.setText(User.getInstance().getEmail());
             }
+
 
 
         }

@@ -10,6 +10,7 @@ import com.raymond.retrofittest.MyApplication;
 import com.raymond.retrofittest.datatype.Moment;
 import com.raymond.retrofittest.datatype.OneDay;
 import com.raymond.retrofittest.datatype.TokenKeeper;
+import com.raymond.retrofittest.datatype.User;
 import com.raymond.retrofittest.utils.Utils;
 
 import java.util.ArrayList;
@@ -125,9 +126,17 @@ public class DatabaseManager {
                 + " where " + DatabaseHelper.DAY_FLAG
                 + " = " + DatabaseHelper.FLAG_DAY_CURRENT;
 
-        Log.d(TAG, "sql is :" + sql);
+        String sql2 = "select * from "
+                + DatabaseHelper.TABLE_DAYS
+                + " where " + DatabaseHelper.DAY_FLAG
+                + " = " + DatabaseHelper.FLAG_DAY_CURRENT
+                + " and " + DatabaseHelper.DAY_USER
+                + " = " + User.getInstance().getUid();
 
-        List<OneDay> days = parseDayCursor(db.rawQuery(sql, null));
+
+        Log.d(TAG, "sql is :" + sql2);
+
+        List<OneDay> days = parseDayCursor(db.rawQuery(sql2, null));
 
         Log.d(TAG, "days size: " + days.size());
 
@@ -213,6 +222,14 @@ public class DatabaseManager {
                 + " where " + DatabaseHelper.DAY_ID
                 + " = " + dayId;
 
+
+        String sql2 = "select * from "
+                + DatabaseHelper.TABLE_MOMENTS
+                + " where " + DatabaseHelper.DAY_ID
+                + " = " + dayId
+                + " and " + DatabaseHelper.USER_ID
+                + " = " + User.getInstance().getUid();
+
         ArrayList<Moment> moments = parseMomentCursor(db.rawQuery(sql, null));
 
         if(moments.size() != 0){
@@ -288,7 +305,15 @@ public class DatabaseManager {
                 + " where " + DatabaseHelper.DAY_FLAG
                 + " = " + DatabaseHelper.FLAG_DAY__COMMIT;
 
-        List<OneDay> days = parseDayCursor(db.rawQuery(sql, null));
+
+        String sql2 = "select * from "
+                + DatabaseHelper.TABLE_DAYS
+                + " where " + DatabaseHelper.DAY_FLAG
+                + " = " + DatabaseHelper.FLAG_DAY__COMMIT
+                + " and " + DatabaseHelper.DAY_USER
+                + " = " + User.getInstance().getUid();
+
+        List<OneDay> days = parseDayCursor(db.rawQuery(sql2, null));
 
         for(OneDay day : days){
             day.setMoments(getMomentByDayId(day.getDayId()));
@@ -305,7 +330,14 @@ public class DatabaseManager {
                 + " where "+ DatabaseHelper.ACCESS
                 + " = " + DatabaseHelper.ACCESS_OPEN;
 
-        List<OneDay> days = parseDayCursor(db.rawQuery(sql, null));
+        String sql2 = "select * from "
+                + DatabaseHelper.TABLE_DAYS
+                + " where "+ DatabaseHelper.ACCESS
+                + " = " + DatabaseHelper.ACCESS_OPEN
+                + " and " + DatabaseHelper.DAY_USER
+                + " = " + User.getInstance().getUid();
+
+        List<OneDay> days = parseDayCursor(db.rawQuery(sql2, null));
 
         for(OneDay day : days){
             day.setMoments(getMomentByDayId(day.getDayId()));

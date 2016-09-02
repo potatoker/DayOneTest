@@ -54,6 +54,7 @@
                 android:background="#694A43" />
 
             <TextView
+                android:id="@+id/settings.logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -185,6 +186,21 @@
                     android:textOn="" />
 
             </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="#495A62" />
+
+            <TextView
+                android:id="@+id/settings.syns.byhand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="20dp"
+                android:text="手动同步"
+                android:textSize="15sp" />
 
             <TextView
                 android:layout_width="match_parent"

@@ -1,6 +1,8 @@
 package com.raymond.retrofittest.datatype;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -10,7 +12,7 @@ import java.util.Date;
 /**
  * Created by raymond on 16/3/12.
  */
-public class Moment {
+public class Moment implements Parcelable{
 
 
     public static final String IMG_PIXEL_NULL = "null";
@@ -31,7 +33,15 @@ public class Moment {
     private String location;
     private String uid;
 
+    private String remote_url;
 
+    public String getRemote_url() {
+        return remote_url;
+    }
+
+    public void setRemote_url(String remote_url) {
+        this.remote_url = remote_url;
+    }
 
     @SerializedName("img_string")
     private String imgString=IMG_PIXEL_NULL;
@@ -159,4 +169,45 @@ public class Moment {
     public void setImgString(String imgString) {
         this.imgString = imgString;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(photoURL);
+        dest.writeString(date);
+        dest.writeString(desc);
+        dest.writeString(dayId);
+        dest.writeString(location);
+        dest.writeString(uid);
+        dest.writeString(remote_url);
+        dest.writeString(imgString);
+
+    }
+
+    public Moment(Parcel in){
+        id = in.readString();
+        photoURL = in.readString();
+        date = in.readString();
+        desc = in.readString();
+        dayId = in.readString();
+        location = in.readString();
+        uid = in.readString();
+        remote_url = in.readString();
+        imgString = in.readString();
+    }
+
+    public static final Parcelable.Creator<Moment> CREATOR = new Parcelable.Creator<Moment>() {
+        public Moment createFromParcel(Parcel in) {
+            return new Moment(in);
+        }
+
+        public Moment[] newArray(int size) {
+            return new Moment[size];
+        }
+    };
 }

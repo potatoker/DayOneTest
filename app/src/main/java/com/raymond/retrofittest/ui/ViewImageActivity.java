@@ -51,6 +51,8 @@ public class ViewImageActivity extends AppCompatActivity {
         openingActivity.startActivity(intent);
     }
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

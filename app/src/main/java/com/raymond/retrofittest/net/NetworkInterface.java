@@ -10,8 +10,11 @@ import com.android.volley.Request;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.raymond.retrofittest.EnvVariable;
+import com.raymond.retrofittest.datatype.Comment;
+import com.raymond.retrofittest.datatype.ExploreDay;
 import com.raymond.retrofittest.datatype.Moment;
 import com.raymond.retrofittest.datatype.OneDay;
+import com.raymond.retrofittest.datatype.User;
 import com.raymond.retrofittest.tools.VolleySingleton;
 import com.raymond.retrofittest.utils.Utils;
 
@@ -33,17 +36,32 @@ public class NetworkInterface {
     public static final String DAY_ID = "day_id";
     public static final String IMAGE_STRING = "image_string";
     public static final String UID = "uid";
+    public static final String KEY_USER = "user";
+    public static final String KEY_PROFILE = "profile";
+    public static final String KEY_EMAIL ="email";
+    public static final String KEY_PWD = "pwd";
+    public static final String KEY_EXPLORE_DAY = "explore_day";
+    public static final String KEY_COMMENT = "comment";
+
 
 
 
     //服务器接口URL
 
-    public static final String BASE_API_URL = "http://192.168.18.14:8088/one_day/controllers";
-    public static final String API_REQUEST_DAYS = BASE_API_URL + "request_days.php";
-    public static final String API_POST_MOMENT_TEST = "http://192.168.18.14:5000/moments";
-    public static final String API_POST_MOMENT = "http://192.168.18.14:5000/post_moment";
-    public static final String API_POST_GET_MOMENTS = "http://192.168.18.14:5000/all_moments";
-    public static final String API_GET_TIMESTAMPS ="http://192.168.18.14:5000/all_moments";
+    public static final String HOST_URL = "http://119.29.138.234:5000";
+
+    public static final String BASE_API_URL = HOST_URL + "/one_day/controllers";
+    public static final String API_REQUEST_DAYS = BASE_API_URL + "/request_days.php";
+    public static final String API_POST_MOMENT_TEST = HOST_URL + "/moments";
+    public static final String API_POST_MOMENT = HOST_URL + "/post_moment";
+    public static final String API_POST_GET_MOMENTS = HOST_URL + "/all_moments";
+    public static final String API_GET_TIMESTAMPS = HOST_URL + "all_moments";
+    public static final String API_GET_EXPLORE_DAYS  = HOST_URL + "/explore_days";
+    public static final String API_POST_COMMENT = HOST_URL + "/comment";
+    public static final String API_SIGN_UP = HOST_URL + "/sign_up";
+    public static final String API_LOGIN = HOST_URL + "/login";
+    public static final String API_POST_EXPLORE_DAY = HOST_URL + "/post_explore2";
+
 
     //返回值
     public static final String POST_SUCCESS = "ok";
@@ -118,6 +136,65 @@ public class NetworkInterface {
 
         VolleySingleton.getInstance().addToRequestQueue(request);
     }
+
+
+    public static void GetExploreDays(String uid, ResponseListener listener){
+        Map<String, String> params = new HashMap<>();
+        params.put(UID, uid);
+        Request request = new PostCustomRequest(API_GET_EXPLORE_DAYS,
+                params, new TypeToken<List<ExploreDay>>(){}.getType(),
+                listener);
+
+        VolleySingleton.getInstance().addToRequestQueue(request);
+    }
+
+    public static void PostExploreDay(ExploreDay exploreDay, ResponseListener listener){
+        Map<String, String> params = new HashMap<>();
+        Gson gson = new Gson();
+        params.put(KEY_EXPLORE_DAY, gson.toJson(exploreDay));
+        Request request = new PostCustomRequest(API_POST_EXPLORE_DAY,
+                params, new TypeToken<String>(){}.getType(),
+                listener);
+
+        VolleySingleton.getInstance().addToRequestQueue(request);
+    }
+
+
+    public static void PostComment(Comment comment, ResponseListener listener){
+        Gson gson = new Gson();
+        Map<String, String> params = new HashMap<>();
+        params.put(KEY_COMMENT, gson.toJson(comment));
+        Request request = new PostCustomRequest(API_POST_COMMENT,
+                params, new TypeToken<Integer>(){}.getType(),
+                listener);
+        VolleySingleton.getInstance().addToRequestQueue(request);
+    }
+
+    public static void SignUp(User user, String imgString, ResponseListener listener){
+        Gson gson = new Gson();
+        Map<String, String> params = new HashMap<>();
+        params.put(KEY_USER, gson.toJson(user));
+        params.put(KEY_PROFILE, imgString);
+
+        Request request = new PostCustomRequest(API_SIGN_UP,
+                params, new TypeToken<User>(){}.getType(),
+                listener);
+        VolleySingleton.getInstance().addToRequestQueue(request);
+    }
+
+    public static void Login(String email, String pwd, ResponseListener listener) {
+        Map<String, String> params = new HashMap<>();
+        params.put(KEY_EMAIL, email);
+        params.put(KEY_PWD, pwd);
+
+        Request request = new PostCustomRequest(API_LOGIN,
+                params, new TypeToken<User>(){}.getType(),
+                listener);
+        VolleySingleton.getInstance().addToRequestQueue(request);
+    }
+
+
+
 
 
 

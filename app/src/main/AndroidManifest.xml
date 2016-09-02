@@ -108,7 +108,14 @@
 
         <activity android:name=".ui.TestActivity" />
         <activity android:name=".ui.DayShowActivity" />
-        <activity android:name=".ui.ViewImageActivity"></activity>
+        <activity android:name=".ui.ViewImageActivity" />
+        <activity
+            android:name=".ui.CommentsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.TransparentActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".ui.SignupActivity" />
+        <activity android:name=".ui.ExploreDayShowActivity"></activity>
     </application>
 
 </manifest>

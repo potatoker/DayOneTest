@@ -2,11 +2,8 @@ package com.raymond.retrofittest.ui.fragments;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,8 +12,6 @@ import android.view.ViewGroup;
 
 import com.raymond.retrofittest.R;
 import com.raymond.retrofittest.adapters.FavaGridAdapter;
-import com.raymond.retrofittest.adapters.GridAdapter;
-import com.raymond.retrofittest.adapters.OneDayAdapter;
 import com.raymond.retrofittest.datatype.Moment;
 import com.raymond.retrofittest.datatype.User;
 
@@ -110,8 +105,8 @@ public class FavaFragment extends BaseFragment {
     public void refreshData(){
         refreshLayout.setRefreshing(true);
 
-        Log.d(TAG+"!!!!!!!S", User.getInstance().getuId());
-        List<Moment> moments = DatabaseManager.getFavaMoments(User.getInstance().getuId());
+        Log.d(TAG+"!!!!!!!S", User.getInstance().getUid());
+        List<Moment> moments = DatabaseManager.getFavaMoments(User.getInstance().getUid());
 
         if(moments!=null){
             favaMoments = moments;

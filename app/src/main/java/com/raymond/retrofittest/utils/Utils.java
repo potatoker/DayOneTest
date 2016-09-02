@@ -2,8 +2,10 @@ package com.raymond.retrofittest.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
@@ -11,6 +13,8 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 
@@ -37,6 +41,8 @@ import java.util.Locale;
  */
 
 public class Utils {
+    private static int screenWidth = 0;
+    private static int screenHeight = 0;
 
 
     private static final String TAG = "Utils";
@@ -249,6 +255,20 @@ public class Utils {
         return (int) (dpValue * scale + 0.5f);
     }
 
+    public static int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+
+    public static Bitmap getBitMapFromString(String imgString){
+        byte[] data = Base64.decode(imgString,Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(data, 0, data.length);
+        return decodedByte;
+
+    }
+
+
+
 
 
     public static void imageDownload(Context ctx, String url){
@@ -321,6 +341,29 @@ public class Utils {
 
         SimpleDateFormat timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss");
         return timestamp.format(date);
+    }
+
+    public static int getScreenWidth(Context c) {
+        if (screenWidth == 0) {
+            WindowManager wm = (WindowManager) c.getSystemService(Context.WINDOW_SERVICE);
+            Display display = wm.getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            screenWidth = size.x;
+        }
+
+        return screenWidth;
+    }
+    public static int getScreenHeight(Context c) {
+        if (screenHeight == 0) {
+            WindowManager wm = (WindowManager) c.getSystemService(Context.WINDOW_SERVICE);
+            Display display = wm.getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            screenHeight = size.y;
+        }
+
+        return screenHeight;
     }
 
 

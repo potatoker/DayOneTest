@@ -46,7 +46,7 @@ public class DayInfoLoader {
 
     public void startLoad(){
         HashMap<String, String> headers = new HashMap<String, String>();
-        headers.put(EnvVariable.HEADER_USERID, User.getInstance().getuId());
+        headers.put(EnvVariable.HEADER_USERID, User.getInstance().getUid());
 //        headers.put("Accept", "*/*");//接受各种媒体类型
 
 //        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(

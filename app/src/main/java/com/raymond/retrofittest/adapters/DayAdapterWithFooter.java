@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +26,6 @@ import com.raymond.retrofittest.db.DatabaseHelper;
 import com.raymond.retrofittest.db.DatabaseManager;
 import com.raymond.retrofittest.ui.DayPublish;
 import com.raymond.retrofittest.ui.MomentEditDialog;
-import com.raymond.retrofittest.ui.PublishActivity;
 import com.raymond.retrofittest.utils.Utils;
 
 
@@ -235,7 +233,7 @@ public class DayAdapterWithFooter extends RecyclerView.Adapter<RecyclerView.View
 
         OneDay day = new OneDay();
         day.setTime(Utils.getCurrentDate());
-        day.setUserId(User.getInstance().getuId());
+        day.setUserId(User.getInstance().getUid());
         day.setFlag(DatabaseHelper.FLAG_DAY_CURRENT);
         day.setFlag(DatabaseHelper.FLAG_DAY_NO_COMMIT);
         DatabaseManager.addDay(day);

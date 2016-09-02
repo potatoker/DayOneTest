@@ -34,7 +34,7 @@ public class DecodeImg {
 
         Picasso.with(context)
                 .load(moment.getPhotoURL())
-                .resize(100,100)
+                .resize(300,300)
                 .into(new Target() {
                     @Override
                     public void onBitmapLoaded (final Bitmap bitmap, Picasso.LoadedFrom from){

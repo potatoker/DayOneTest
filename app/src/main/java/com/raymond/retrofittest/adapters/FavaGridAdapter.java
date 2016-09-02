@@ -17,6 +17,7 @@ import com.raymond.retrofittest.datatype.Moment;
 import com.raymond.retrofittest.db.DatabaseManager;
 import com.raymond.retrofittest.ui.BaseActivity;
 import com.raymond.retrofittest.ui.MomentEditDialog;
+import com.raymond.retrofittest.ui.ViewImageActivity;
 import com.raymond.retrofittest.utils.Utils;
 
 import java.util.List;
@@ -87,6 +88,15 @@ public class FavaGridAdapter extends RecyclerView.Adapter<FavaGridAdapter.GridVi
                 return false;
             }
         });
+
+
+        holder.daypic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewImageActivity.openWithMomentId(context, moment.getId(),moment.getPhotoURL(),moment.getDesc());
+            }
+        });
+
     }
 
     @Override

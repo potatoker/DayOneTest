@@ -24,6 +24,9 @@ public class TokenKeeper {
     private static final String KEY_LAST_DAY_ID = "last_day_id";
     private static final String KEY_LAST_MOMENT_ID = "last_moment_id";
     private static final String ALARM_OPEN="alarm_open";
+    private static final String KEY_AVATAR_REMOTE = "avatar_remote";
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_PWD = "pwd";
 
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -47,9 +50,10 @@ public class TokenKeeper {
 
     public void getUser(){
         User user = User.getInstance();
-        user.setAvatarURL(pref.getString(KEY_AVATER_LOCAL, null));
-        user.setuId(pref.getString(KEY_UID, null));
+        user.setAvatarurl(pref.getString(KEY_AVATAR_REMOTE, null));
+        user.setUid(pref.getString(KEY_UID, null));
         user.setName(pref.getString(KEY_NAME, null));
+        user.setEmail(pref.getString(KEY_EMAIL, null));
     }
 
 
@@ -64,6 +68,17 @@ public class TokenKeeper {
         editor.putInt(KEY_LAST_MOMENT_ID, momentId);
         editor.commit();
     }
+
+    public void setUser(User user){
+        editor.putBoolean(IS_USER_LOGIN, true);
+        editor.putString(KEY_UID, user.getUid());
+        editor.putString(KEY_AVATAR_REMOTE, user.getAvatarurl());
+        editor.putString(KEY_NAME, user.getName());
+        editor.putString(KEY_EMAIL, user.getEmail());
+        editor.putString(KEY_PWD, user.getPwd());
+        editor.commit();
+    }
+
 
     public void setAlarmOpen(Boolean bool){
         editor.putBoolean(ALARM_OPEN, bool);
@@ -95,7 +110,7 @@ public class TokenKeeper {
     }
 
     public void logoutUser(){
-        editor.clear();
+        editor.putBoolean(IS_USER_LOGIN, false);
         editor.commit();
     }
 

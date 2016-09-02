@@ -25,12 +25,16 @@ import com.raymond.retrofittest.MyApplication;
 import com.raymond.retrofittest.R;
 import com.raymond.retrofittest.datatype.TokenKeeper;
 import com.raymond.retrofittest.service.AlarmReceiver;
+import com.raymond.retrofittest.ui.LoginActivity;
 import com.raymond.retrofittest.ui.MyNewDaysActivity;
+import com.raymond.retrofittest.utils.Sysner;
 import com.raymond.retrofittest.utils.Utils;
 import com.raymond.retrofittest.views.NestedCoordinatorLayout;
 
 import butterknife.Bind;
+import butterknife.BindInt;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by raymond on 6/5/16.
@@ -47,8 +51,16 @@ public class MoreFragement extends BaseFragment {
     @Bind(R.id.settings_syns)
     ToggleButton synsBtton;
 
+    @Bind(R.id.settings_logout)
+    TextView logout;
+
+    @Bind(R.id.settings_syns_byhand)
+    TextView synsByHand;
+
+
     PendingIntent pendingIntent;
     TokenKeeper tokenKeeper;
+
 
 
     public static MoreFragement newInstance() {
@@ -72,6 +84,18 @@ public class MoreFragement extends BaseFragment {
         pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent, 0);
         tokenKeeper = new TokenKeeper(MyApplication.getAppContext());
         initAlarmToggle();
+
+
+        tokenKeeper = new TokenKeeper(getActivity().getApplicationContext());
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tokenKeeper.logoutUser();
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
 
         return mRootView;
     }
@@ -113,6 +137,12 @@ public class MoreFragement extends BaseFragment {
         AlarmManager manager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         manager.cancel(pendingIntent);
         Toast.makeText(getActivity(), "Alarm Canceled", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.settings_syns_byhand)
+    public void SynsByHand(){
+        Toast.makeText(getActivity(), "start sync", Toast.LENGTH_SHORT).show();
+        new Sysner(getActivity()).startSysn();
     }
 
 

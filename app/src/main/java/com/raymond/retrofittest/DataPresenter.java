@@ -5,8 +5,11 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.android.volley.VolleyError;
+import com.raymond.retrofittest.datatype.Comment;
+import com.raymond.retrofittest.datatype.ExploreDay;
 import com.raymond.retrofittest.datatype.Moment;
 import com.raymond.retrofittest.datatype.OneDay;
+import com.raymond.retrofittest.datatype.User;
 import com.raymond.retrofittest.net.NetworkInterface;
 import com.raymond.retrofittest.net.ResponseListener;
 
@@ -124,6 +127,88 @@ public class DataPresenter {
         });
     }
 
+    public static void GetExploreDays(String uid, final GetExploreDays q){
+        NetworkInterface.GetExploreDays(uid, new ResponseListener<List<ExploreDay>>(){
+
+            @Override
+            public void onResponse(List<ExploreDay> response) {
+                q.onGetExploreDays(response,true);
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, error.toString());
+                q.onGetExploreDays(null, false);
+            }
+        });
+    }
+
+    public static void PostComment(Comment comment, final PostComment q){
+        NetworkInterface.PostComment(comment, new ResponseListener<Integer>(){
+
+            @Override
+            public void onResponse(Integer response) {
+                q.onPostComment(response,true);
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, error.toString());
+                q.onPostComment(0, false);
+            }
+        });
+    }
+
+    public static void SignUp(User user, String imgString, final SignUp q){
+        NetworkInterface.SignUp(user, imgString, new ResponseListener<User>(){
+
+            @Override
+            public void onResponse(User response) {
+                q.onSignUp(response, true);
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, error.toString());
+                q.onSignUp(null,false);
+            }
+        });
+    }
+
+    public static void Login(String email, String pwd, final Login q){
+        NetworkInterface.Login(email, pwd, new ResponseListener<User>(){
+
+            @Override
+            public void onResponse(User response) {
+                q.onLogin(response, true);
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG,error.toString());
+                q.onLogin(null, false);
+            }
+        });
+    }
+
+    public static void PostExploreDay(ExploreDay exploreDay, final PostExploreDay q){
+        NetworkInterface.PostExploreDay(exploreDay, new ResponseListener<String>(){
+
+            @Override
+            public void onResponse(String response) {
+                q.onPostExploreDya(response, true);
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG,error.toString());
+                q.onPostExploreDya(null, false);
+            }
+        });
+    }
+
+
+
 
 
     //给调用的activity提供的回调函数的接口，让他们可以定义得到数据之后的动作
@@ -153,6 +238,26 @@ public class DataPresenter {
 
     public interface  GetStamps{
         void onGetStamps(List<String> dates, Boolean ok);
+    }
+
+    public interface GetExploreDays{
+        void onGetExploreDays(List<ExploreDay> exploreDays, Boolean ok);
+    }
+
+    public interface PostComment{
+        void onPostComment(int i, Boolean ok);
+    }
+
+    public interface Login{
+        void onLogin(User user, Boolean ok);
+    }
+
+    public interface SignUp{
+        void onSignUp(User user, Boolean ok);
+    }
+
+    public interface PostExploreDay{
+        void onPostExploreDya(String dayId, Boolean ok);
     }
 
 }

@@ -27,11 +27,6 @@ import com.raymond.retrofittest.utils.Utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.net.URI;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -59,7 +54,7 @@ public class TestActivity extends AppCompatActivity implements DataPresenter.Pos
 
         ButterKnife.bind(this);
 
-        favas = DatabaseManager.getFavaMoments(User.getInstance().getuId());
+        favas = DatabaseManager.getFavaMoments(User.getInstance().getUid());
 
         Log.d(TAG, "fava size:"+favas.size());
 
@@ -284,10 +279,6 @@ public class TestActivity extends AppCompatActivity implements DataPresenter.Pos
 //                    moment.setPhotoURL(path);
 //                }
 //            }
-
-
-
-
 
             if(moments.size()==2){
 

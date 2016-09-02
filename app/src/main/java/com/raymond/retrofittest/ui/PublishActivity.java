@@ -17,7 +17,6 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.raymond.retrofittest.Message;
 import com.raymond.retrofittest.R;
 import com.raymond.retrofittest.datatype.Moment;
 import com.raymond.retrofittest.datatype.OneDay;
@@ -27,8 +26,6 @@ import com.raymond.retrofittest.db.DatabaseManager;
 import com.raymond.retrofittest.utils.Utils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 
@@ -203,7 +200,7 @@ public class PublishActivity extends BaseActivity {
         if (currentDay == null){
             OneDay day = new OneDay();
             day.setTime(Utils.getCurrentDate());
-            day.setUserId(User.getInstance().getuId());
+            day.setUserId(User.getInstance().getUid());
             day.setFlag(DatabaseHelper.FLAG_DAY_CURRENT);
 //            day.setFlag(DatabaseHelper.FLAG_DAY_NO_COMMIT);
 
@@ -222,7 +219,7 @@ public class PublishActivity extends BaseActivity {
         moment.setDate(Utils.getCurrentTime());
 
         moment.setDayId(currentDay.getDayId());
-        moment.setUid(User.getInstance().getuId());
+        moment.setUid(User.getInstance().getUid());
 
         DatabaseManager.addMoment(moment);
 
@@ -244,7 +241,7 @@ public class PublishActivity extends BaseActivity {
         moment.setDayId(DatabaseManager.FAVADAY);
         moment.setFavaFlag(DatabaseHelper.FLAG_MOMENT_FAVA);
         moment.setLocation(positionEditText.getText().toString());
-        moment.setUid(User.getInstance().getuId());
+        moment.setUid(User.getInstance().getUid());
         moment.setMoment_snyc(Utils.getTimeStamp2());
         DatabaseManager.addMoment(moment);
         finish();
